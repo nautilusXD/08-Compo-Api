@@ -5,12 +5,13 @@
   <h5 v-if="errorMessage">{{ errorMessage }}</h5>
 
   <div v-if="users.length > 0">
-    <user-list :users="users" v-slot="{ user }">
-      <h5>{{ user.first_name }} {{ user.last_name }}</h5>
-      <span>{{ user.email }}</span>
-    </user-list>
+    <ul>
+      <li v-for="{ id, first_name, last_name, email } in users" :key="id">
+        <h4>{{ first_name }} {{ last_name }}</h4>
+        <h6>{{ email }}</h6>
+      </li>
+    </ul>
   </div>
-
   <button @click="prevPage">Atras</button>
   <button @click="nextPage">Siguiente</button>
   <span>Pagina:{{ currentPage }}</span>
@@ -18,13 +19,9 @@
 
 <script>
 import useUsers from "../composables/useUsers";
-import UserList from "../components/UserList.vue";
 
 export default {
   name: "Users",
-  components: {
-    UserList,
-  },
   setup() {
     const { currentPage, errorMessage, isLoading, users, nextPage, prevPage } =
       useUsers();

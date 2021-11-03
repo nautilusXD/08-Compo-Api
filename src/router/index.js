@@ -54,6 +54,15 @@ const routes = [{
                 "../views/TodoVuex.vue"
             ),
     },
+    {
+        path: "/slots",
+        name: "slots",
+        component: () =>
+            import (
+                /* webpackChunkName: "Slots" */
+                "../views/CustomSlots.vue"
+            ),
+    },
 ];
 
 const router = createRouter({

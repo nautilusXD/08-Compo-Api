@@ -34,50 +34,30 @@
       </li>
     </ul>
   </div>
-
-  <button @click="isOpen = true">Crear Todo</button>
-
-  <modal v-if="isOpen" @on:Close="isOpen = false">
-    <template v-slot:header>
-      <h1>Nueva Tarea</h1>
-    </template>
-
-    <template v-slot:body>
-      <form
-        @submit.prevent="
-          createTodo(newTodoText);
-          isOpen = false;
-        "
-      >
-        <input type="text" placeholder="Nueva tarea" v-model="newTodoText" />
-        <br />
-        <br />
-        <button type="submit">Crear</button>
-      </form>
-    </template>
-  </modal>
 </template>
 
 <script>
-import { ref } from "vue";
-import useTodos from "../composables/useTodos";
-import Modal from "../components/Modal.vue";
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
 
 export default {
-  components: { Modal },
   setup() {
-    const { currentTab, pending, getTodosByTab, toggleTodo, createTodo } =
-      useTodos();
+    const store = useStore();
+
+    const currentTab = ref("all");
 
     return {
       currentTab,
-      getTodosByTab,
-      pending,
-      toggleTodo,
-      createTodo,
 
-      isOpen: ref(false),
-      newTodoText: ref(""),
+      all: computed(() => store.getters["allTodos"]),
+      completed: computed(() => store.getters["completedTodos"]),
+      pending: computed(() => store.getters["pendingTodos"]),
+
+      getTodosByTab: computed(() =>
+        store.getters["getTodosByTab"](currentTab.value)
+      ),
+      //methods
+      toggleTodo: (id) => store.commit("toggleTodo", id),
     };
   },
 };
